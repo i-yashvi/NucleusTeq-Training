@@ -96,3 +96,66 @@ BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
 $ git commit -m "another commit"
 [main a90c5a4] another commit
  1 file changed, 22 insertions(+)
+
+ BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git status
+On branch main
+Your branch is ahead of 'origin/main' by 5 commits.
+  (use "git push" to publish your local commits)   
+
+nothing to commit, working tree clean
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git push origin main
+Enumerating objects: 23, done.
+Counting objects: 100% (23/23), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (15/15), done.
+Writing objects: 100% (20/20), 2.34 KiB | 342.00 KiB/s, done.
+Total 20 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), done.
+To https://github.com/i-yashvi/NucleusTeq-Training.git
+   dcd86c6..cdefbdc  main -> main
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git push origin new_branch
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: 
+remote: Create a pull request for 'new_branch' on GitHub by visiting:
+remote:      https://github.com/i-yashvi/NucleusTeq-Training/pull/new/new_branch
+remote:
+To https://github.com/i-yashvi/NucleusTeq-Training.git
+ * [new branch]      new_branch -> new_branch
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git push origin another_branch
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: 
+remote: Create a pull request for 'another_branch' on GitHub by visiting:
+remote:      https://github.com/i-yashvi/NucleusTeq-Training/pull/new/another_branch
+remote:
+To https://github.com/i-yashvi/NucleusTeq-Training.git
+ * [new branch]      another_branch -> another_branch
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git pull origin main
+From https://github.com/i-yashvi/NucleusTeq-Training
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git log --oneline --graph --all
+* cdefbdc (HEAD -> main, origin/main, origin/HEAD) Last Commit
+* a90c5a4 another commit
+* 63f7200 (origin/new_branch, origin/another_branch, new_branch, another_branch) new changes
+* 14fcbec New branch added
+* 71b523e new commit
+* dcd86c6 New files added
+* 0173636 GIT and SQL folders added
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git log -p Assignment1.txt
+fatal: ambiguous argument 'Assignment1.txt': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+
