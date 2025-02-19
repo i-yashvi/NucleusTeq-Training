@@ -1,0 +1,35 @@
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git status
+On branch main
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        GIT/
+        SQL/
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git add .
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git commit -m "GIT and SQL folders added"
+[main (root-commit) 0173636] GIT and SQL folders added
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 GIT/.gitkeep
+ create mode 100644 SQL/.gitkeep
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git push origin main
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (4/4), 274 bytes | 137.00 KiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/i-yashvi/NucleusTeq-Training.git
+ * [new branch]      main -> main
+
+ 
