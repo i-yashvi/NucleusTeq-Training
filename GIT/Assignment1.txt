@@ -36,3 +36,25 @@ BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
 $ git checkout -b new_branch
 Switched to a new branch 'new_branch'
 
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (new_branch)
+$ git status
+On branch new_branch
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   GIT/Assignment1.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (new_branch)
+$ git add GIT/Assignment1.txt
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (new_branch)
+$ git commit -m "new commit"
+[new_branch 71b523e] new commit
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (new_branch)
+$ git checkout -b another_branch
+Switched to a new branch 'another_branch'
+
