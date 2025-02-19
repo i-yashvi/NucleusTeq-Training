@@ -88,3 +88,11 @@ Updating dcd86c6..63f7200
 Fast-forward
  GIT/Assignment1.txt | 35 ++++++++++++++++++++++++++++++++++-
  1 file changed, 34 insertions(+), 1 deletion(-)
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git add .
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git commit -m "another commit"
+[main a90c5a4] another commit
+ 1 file changed, 22 insertions(+)
