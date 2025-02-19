@@ -32,4 +32,7 @@ Total 4 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
 To https://github.com/i-yashvi/NucleusTeq-Training.git
  * [new branch]      main -> main
 
- 
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git checkout -b new_branch
+Switched to a new branch 'new_branch'
+
