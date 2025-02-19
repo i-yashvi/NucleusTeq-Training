@@ -66,3 +66,25 @@ $ git commit -m "New branch added"
 [another_branch 14fcbec] New branch added
  1 file changed, 22 insertions(+)
 
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (another_branch)
+$ git checkout new_branch
+Switched to branch 'new_branch'
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (new_branch)
+$ git merge another_branch
+Updating 71b523e..63f7200
+Fast-forward
+ GIT/Assignment1.txt | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (new_branch)
+$ git checkout main
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (main)
+$ git merge new_branch
+Updating dcd86c6..63f7200
+Fast-forward
+ GIT/Assignment1.txt | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
