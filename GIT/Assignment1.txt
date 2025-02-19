@@ -58,3 +58,11 @@ BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (new_branch)
 $ git checkout -b another_branch
 Switched to a new branch 'another_branch'
 
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (another_branch)
+$ git add .
+
+BIIT@DESKTOP-MT1T055 MINGW64 ~/Desktop/NucleusTeq-Training (another_branch)
+$ git commit -m "New branch added"
+[another_branch 14fcbec] New branch added
+ 1 file changed, 22 insertions(+)
+
