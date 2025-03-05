@@ -169,7 +169,7 @@ function rollDice(player) {
         else {
             player1CurrentScore += diceValue;
             p1CurrentScoreDisplay.textContent = player1CurrentScore;
-            if (player1CurrentScore+player1SavedScore >= 10) {
+            if (player1CurrentScore+player1SavedScore >= 100) {
                 player1SavedScore += player1CurrentScore;
                 player1Display.textContent = player1SavedScore;
                 setTimeout(() => {
@@ -196,7 +196,7 @@ function rollDice(player) {
         else {
             player2CurrentScore += diceValue;
             p2CurrentScoreDisplay.textContent = player2CurrentScore;
-            if (player2CurrentScore+player2SavedScore >= 10) {
+            if (player2CurrentScore+player2SavedScore >= 100) {
                 player2SavedScore += player2CurrentScore;
                 player2Display.textContent = player2SavedScore;
                 setTimeout(() => {
@@ -231,12 +231,12 @@ function saveScore(player) {
     }
 
     //check for winner
-    if (player1SavedScore >= 10) {
+    if (player1SavedScore >= 100) {
         alert(`${player1NameInput.value || 'Player 1'} wins!`);
         isGameOver = true;
         window.location.reload();
     }
-    else if (player2SavedScore >= 10) {
+    else if (player2SavedScore >= 100) {
         alert(`${player2NameInput.value || 'Player 2'} wins!`);
         isGameOver = true;
         window.location.reload();
