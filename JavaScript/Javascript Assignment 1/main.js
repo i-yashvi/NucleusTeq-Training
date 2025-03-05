@@ -23,9 +23,35 @@ const p2Scores = document.getElementById('p2-score-container');
 const player2Display = document.getElementById('player2-saveScore');
 const p2CurrentScoreDisplay = document.getElementById('player2-currentScore');
 const savePlayer2Button = document.getElementById('save-player2');
+const winnerOverlay = document.getElementById('winner-overlay');
+const winnerMessage = document.getElementById('winner-message');
+const newGameButton = document.getElementById('new-game');
 
 player1NameInput.classList.remove('hidden');
 player2NameInput.classList.remove('hidden');
+
+function showWinner(playerName, player) {
+    startGameButton.classList.add('hidden');
+    diceRollBox.classList.add('hidden');
+    resetGameButton.classList.add('hidden');
+    rollDiceButton.classList.add('hidden');
+    if(player === 1){
+        savePlayer1Button.disabled = true;
+        savePlayer1Button.classList.add('disabled'); 
+        savePlayer1Button.classList.remove('active');
+    }
+    else{
+        savePlayer2Button.disabled = true;
+        savePlayer2Button.classList.add('disabled'); 
+        savePlayer2Button.classList.remove('active');
+    }
+    winnerMessage.textContent = `${playerName} wins!`;
+    winnerOverlay.classList.remove('hidden');
+}
+
+newGameButton.addEventListener('click', () => {
+    window.location.reload();
+});
 
 function startGame() {
 
@@ -47,6 +73,7 @@ function startGame() {
     p2CurrentScoreDisplay.textContent = player2CurrentScore;
 
     //hide start game button and show dice area
+    diceContainer.classList.remove("roll-animation");
     startGameButton.classList.add('hidden');
     diceRollBox.classList.remove('hidden');
     resetGameButton.classList.remove('hidden');
@@ -64,13 +91,19 @@ function startGame() {
     savePlayer1Button.disabled = true;
     savePlayer2Button.disabled = true;
 
+    const interval = setInterval(() => {
+       randomizeDice(diceContainer);
+    }, 30);
+
+    setTimeout(() => {
+        clearInterval(interval);
+    }, 500);
+
     updateColors();
 }
 
 function randomizeDice(diceContainer){
     diceContainer.innerHTML = "";
-    const diceSound = new Audio('Dice-roll.mp3');
-    //diceSound.play();
 
     const random = Math.floor((Math.random()*6) + 1);
     const dotPositionMatrix = {
@@ -145,72 +178,65 @@ function rollDice(player) {
 
     let diceValue = 0;
 
-    /* const interval = setInterval(() => {
-       diceValue = randomizeDice(diceContainer);
-    }, 50);
+    diceContainer.classList.remove("roll-animation");
+    void diceContainer.offsetWidth; 
+    diceContainer.classList.add("roll-animation");
 
-    setTimeout(() => {
-        clearInterval(interval);
-        diceValue = randomizeDice(diceContainer);
-    }, 1000); */
+    const diceSound = new Audio('Dice-roll.mp3');
+    diceSound.play();
 
     diceValue = randomizeDice(diceContainer);
 
-    if(player === 1){
-        savePlayer1Button.disabled = false;
-        savePlayer1Button.classList.add('active');
-        savePlayer1Button.classList.remove('disabled');
-        if(diceValue === 1){
-            player1CurrentScore = 0;
-            currentPlayer = 2;
-            p1CurrentScoreDisplay.textContent = player1CurrentScore;
-            updateColors();
-        }
-        else {
-            player1CurrentScore += diceValue;
-            p1CurrentScoreDisplay.textContent = player1CurrentScore;
-            if (player1CurrentScore+player1SavedScore >= 100) {
-                player1SavedScore += player1CurrentScore;
-                player1Display.textContent = player1SavedScore;
-                setTimeout(() => {
-                    alert(`${player1NameInput.value || 'Player 1'} wins!`);
-                }, 700);
-                
-                isGameOver = true;
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+    setTimeout(() => {
+
+        diceValue = randomizeDice(diceContainer);
+
+        if(player === 1){
+            savePlayer1Button.disabled = false;
+            savePlayer1Button.classList.add('active');
+            savePlayer1Button.classList.remove('disabled');
+            if(diceValue === 1){
+                player1CurrentScore = 0;
+                currentPlayer = 2;
+                p1CurrentScoreDisplay.textContent = player1CurrentScore;
+                updateColors();
+            }
+            else {
+                player1CurrentScore += diceValue;
+                p1CurrentScoreDisplay.textContent = player1CurrentScore;
+                if (player1CurrentScore + player1SavedScore >= 10) {
+                    player1SavedScore += player1CurrentScore;
+                    player1Display.textContent = player1SavedScore;
+                    setTimeout(() => {
+                        showWinner(player1NameInput.value || 'Player 1', currentPlayer);
+                    }, 500);
+                }
             }
         }
-    }
-    else{
-        savePlayer2Button.disabled = false;
-        savePlayer2Button.classList.add('active');
-        savePlayer2Button.classList.remove('disabled');
-        if(diceValue === 1){
-            player2CurrentScore = 0;
-            currentPlayer = 1;
-            p2CurrentScoreDisplay.textContent = player2CurrentScore;
-            updateColors();
-        }
-        else {
-            player2CurrentScore += diceValue;
-            p2CurrentScoreDisplay.textContent = player2CurrentScore;
-            if (player2CurrentScore+player2SavedScore >= 100) {
-                player2SavedScore += player2CurrentScore;
-                player2Display.textContent = player2SavedScore;
-                setTimeout(() => {
-                    alert(`${player2NameInput.value || 'Player 2'} wins!`);
-                }, 700);
-                
-                isGameOver = true;
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+        else{
+            savePlayer2Button.disabled = false;
+            savePlayer2Button.classList.add('active');
+            savePlayer2Button.classList.remove('disabled');
+            if(diceValue === 1){
+                player2CurrentScore = 0;
+                currentPlayer = 1;
+                p2CurrentScoreDisplay.textContent = player2CurrentScore;
+                updateColors();
+            }
+            else {
+                player2CurrentScore += diceValue;
+                p2CurrentScoreDisplay.textContent = player2CurrentScore;
+                if (player2CurrentScore + player2SavedScore >= 10) {
+                    player2SavedScore += player2CurrentScore;
+                    player2Display.textContent = player2SavedScore;
+                    setTimeout(() => {
+                        showWinner(player2NameInput.value || 'Player 2', currentPlayer);
+                    }, 500);
+                }
             }
         }
-    }
-}
+    }, 1000);
+} 
 
 function saveScore(player) {
     if (isGameOver) return;
@@ -230,21 +256,8 @@ function saveScore(player) {
         p2CurrentScoreDisplay.textContent = player2CurrentScore; 
     }
 
-    //check for winner
-    if (player1SavedScore >= 100) {
-        alert(`${player1NameInput.value || 'Player 1'} wins!`);
-        isGameOver = true;
-        window.location.reload();
-    }
-    else if (player2SavedScore >= 100) {
-        alert(`${player2NameInput.value || 'Player 2'} wins!`);
-        isGameOver = true;
-        window.location.reload();
-    }
-
     updateColors();
 }
-
 
 //event listeners
 rollDiceButton.addEventListener('click', () => rollDice(currentPlayer));

@@ -146,6 +146,20 @@ button:hover {
     background-color: rgb(228, 4, 4);
     color:white;
 }
+#winner-message {
+    color: #0d3b66;
+}
+.pop-up {
+    animation: popUp 0.5s ease-out;
+}
+#new-game {
+    margin-top: 10px;
+    background-color: #4CAF50;
+    color: white;
+}
+#new-game:hover {
+    box-shadow: 0 0 10px #f4d35e;
+}
 #dice-roll-box{
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -159,9 +173,10 @@ button:hover {
     border: 2px solid #0d3b66;
     border-radius: 10px;
     display: grid;
-    grid-template-columns: 33% 33% 33%;
-    grid-template-rows: 33% 33% 33%;
     position: relative;
+}
+.roll-animation {
+    animation: rollAnimation 0.5s ease-in-out;
 }
 .dice-dot {
     width: 20px;
@@ -221,13 +236,25 @@ button:hover {
     border: #929191;
     cursor: not-allowed; 
 }
-/* .player-roll-btn.active {
-    background: linear-gradient(to right, #f4d35e, #faf0ca);
-    color: #0d3b66; 
-    box-shadow: 0 0 10px rgba(250, 240, 202, 0.5);
-    border: none;
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+    }
+    .player-box, .center-box {
+        width: 90%;
+        margin-bottom: 20px;
+    }
 }
-.player-roll-btn.active:hover {
-    background: linear-gradient(to right, #faf0ca, #f4d35e);
-    color: #0d3b66;
-} */
+@keyframes rollAnimation {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    50% { transform: rotate(180deg); }
+    75% { transform: rotate(270deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes popUp {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
