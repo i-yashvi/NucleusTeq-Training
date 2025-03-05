@@ -30,6 +30,9 @@ const newGameButton = document.getElementById('new-game');
 player1NameInput.classList.remove('hidden');
 player2NameInput.classList.remove('hidden');
 
+const diceSound = new Audio('dice-roll.mp3');
+diceSound.preload = 'auto';
+
 function showWinner(playerName, player) {
     startGameButton.classList.add('hidden');
     diceRollBox.classList.add('hidden');
@@ -178,18 +181,16 @@ function rollDice(player) {
 
     let diceValue = 0;
 
+    diceSound.currentTime = 0; 
+    diceSound.play().catch(error => console.log("Audio playback failed: ", error));
+
     diceContainer.classList.remove("roll-animation");
     void diceContainer.offsetWidth; 
     diceContainer.classList.add("roll-animation");
 
-    const diceSound = new Audio('Dice-roll.mp3');
-    diceSound.play();
-
     diceValue = randomizeDice(diceContainer);
 
     setTimeout(() => {
-
-        diceValue = randomizeDice(diceContainer);
 
         if(player === 1){
             savePlayer1Button.disabled = false;
@@ -209,7 +210,7 @@ function rollDice(player) {
                     player1Display.textContent = player1SavedScore;
                     setTimeout(() => {
                         showWinner(player1NameInput.value || 'Player 1', currentPlayer);
-                    }, 500);
+                    }, 200);
                 }
             }
         }
@@ -231,7 +232,7 @@ function rollDice(player) {
                     player2Display.textContent = player2SavedScore;
                     setTimeout(() => {
                         showWinner(player2NameInput.value || 'Player 2', currentPlayer);
-                    }, 500);
+                    }, 200);
                 }
             }
         }
