@@ -30,7 +30,7 @@ const newGameButton = document.getElementById('new-game');
 player1NameInput.classList.remove('hidden');
 player2NameInput.classList.remove('hidden');
 
-const diceSound = new Audio('dice-roll.mp3');
+const diceSound = new Audio('Dice-roll.mp3');
 diceSound.preload = 'auto';
 
 function showWinner(playerName, player) {
