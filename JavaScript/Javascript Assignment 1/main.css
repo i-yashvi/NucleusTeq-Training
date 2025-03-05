@@ -240,13 +240,33 @@ button:hover {
     .game-container {
         flex-direction: column;
         height: auto;
+        width: 90%;
         padding: 20px;
     }
-    .player-box, .center-box {
-        width: 90%;
+    .player-box {
+        width: 80%;
         margin-bottom: 20px;
     }
+    .center-box {
+        width: 80%;
+    }
+    .dice {
+        width: 80px;
+        height: 80px;
+    }
+    .saveScore {
+        font-size: 50px;
+    }
+    .currentScoreSpan {
+        font-size: 20px;
+    }
+    .start-button {
+        width: 80px;
+        height: 80px;
+        font-size: 16px;
+    }
 }
+
 @keyframes rollAnimation {
     0% { transform: rotate(0deg); }
     25% { transform: rotate(90deg); }
