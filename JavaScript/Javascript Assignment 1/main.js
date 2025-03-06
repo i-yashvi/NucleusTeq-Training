@@ -159,6 +159,7 @@ function randomizeDice(diceContainer){
 function updateColors() {
     
     if(currentPlayer === 1) {
+        savePlayer1Button.disabled = "true";
         savePlayer1Button.classList.add('disabled'); 
         savePlayer1Button.classList.remove('active');
         savePlayer2Button.classList.add('disabled'); 
@@ -167,6 +168,7 @@ function updateColors() {
         document.getElementById('player2-box').classList.remove('active');
     }
     else{
+        savePlayer2Button.disabled = "true";
         savePlayer2Button.classList.add('disabled'); 
         savePlayer2Button.classList.remove('active');
         savePlayer1Button.classList.add('disabled'); 
