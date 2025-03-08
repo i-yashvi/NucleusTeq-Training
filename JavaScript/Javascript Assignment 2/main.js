@@ -28,6 +28,7 @@ let finalScoreDisplay = document.getElementById("score-points");
 let restartButton = document.getElementById("restart");
 let answerOptions = document.querySelectorAll(".answer");    // Answer options
 
+
 difficultyOptions.forEach(button => {
     button.addEventListener('click', function() {
         selectedDifficulty = button.value.toLowerCase();
@@ -74,7 +75,8 @@ async function fetchQuestions() {
         questions = data.results;
         currentQuestionNumber = 0;
         loadQuestion();
-    } catch (error) {
+    } 
+    catch (error) {
         console.error("Error fetching questions:", error);
         alert("Failed to load questions. Please try again!");
     }
@@ -87,7 +89,7 @@ function loadQuestion() {
     }
 
     let questionData = questions[currentQuestionNumber];
-    questionNumber.textContent = `${currentQuestionNumber + 1}/10`;
+    questionNumber.textContent = `${currentQuestionNumber + 1}`;
     questionPrompt.innerHTML = questionData.question;
     answered = false;
     nextButton.disabled = true;
@@ -97,7 +99,7 @@ function loadQuestion() {
 
     answerOptions.forEach((option, index) => {
         option.textContent = answers[index];
-        option.classList.remove("correct", "wrong", "active");
+        option.classList.remove("correct", "wrong", "active", "rightAnswer");
         option.onclick = () => checkAnswer(option, answers[index], questionData.correct_answer);
     });
     startTimer();
@@ -109,13 +111,14 @@ function checkAnswer(selectedOption, selected, correct) {
 
     clearInterval(timerInterval);
     answered = true;
-    nextButton.disabled = false;
 
     // Step 1: Animate the selected answer to indicate correctness
     if (selected === correct) {
-        selectedOption.classList.add("active"); // Blue animation for correct answer
-        yourScore++;
-        currentPoints.textContent = yourScore;
+        selectedOption.classList.add("correct"); // Blue animation for correct answer
+        setTimeout(() => {
+            yourScore++; 
+            currentPoints.textContent = yourScore;
+        }, 2500);
     } else {
         selectedOption.classList.add("wrong"); // Red animation for incorrect answer
     }
@@ -123,12 +126,16 @@ function checkAnswer(selectedOption, selected, correct) {
     // Step 2: After animation completes, highlight the correct answer without animation
     setTimeout(() => {
         answerOptions.forEach(option => {
-            option.classList.remove("active", "wrong"); // Remove animations
+            option.classList.remove("active", "wrong", "correct", "rightAnswer"); // Remove animations
             if (option.textContent === correct) {
-                option.classList.add("correct"); // Just highlight the correct answer
+                option.classList.add("rightAnswer"); // Just highlight the correct answer
             }
         });
-    }, 2000); // Delay to allow animation
+    }, 3000); // Delay to allow animation
+
+    setTimeout(() => {
+        nextButton.disabled = false;
+    }, 3000);
 }
 
 // Start Timer
@@ -151,16 +158,19 @@ function startTimer() {
 function showCorrectAnswer() {
     if (answered) return;
     answered = true;
-    nextButton.disabled = false;
     
     let correctAnswer = questions[currentQuestionNumber].correct_answer;
 
     answerOptions.forEach(option => {
-        option.classList.remove("active", "wrong"); // Remove animations
+        option.classList.remove("active", "wrong", "correct"); // Remove animations
         if (option.textContent === correctAnswer) {
-            option.classList.add("correct"); // Highlight correct answer
+            option.classList.add("rightAnswer"); // Highlight correct answer
         }
     });
+
+    setTimeout(() => {
+        nextButton.disabled = false;
+    }, 4000);
 }
 
 // Load next question when "Next" is clicked
@@ -183,7 +193,7 @@ function endGame() {
 
     document.getElementById("message-display").textContent = message;
     document.getElementById("player-name-message").textContent = nameOfPlayer;
-    finalScoreDisplay.textContent = `${yourScore}/10`;
+    finalScoreDisplay.textContent = `${yourScore}`;
 }
 
 // Event Listeners

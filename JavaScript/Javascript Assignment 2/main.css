@@ -73,7 +73,7 @@ select {
     background-color: rgb(248, 231, 5);  
     cursor: pointer;
 }
-.difficulty-option:not(:disabled)#difficult:hover {
+.difficulty-option:not(:disabled)#hard:hover {
     background-color: rgb(248, 39, 2);  
     cursor: pointer;
 }
@@ -90,7 +90,7 @@ select {
 .difficulty-option.selected#medium {
     background-color: rgb(248, 231, 5);
 }
-.difficulty-option.selected#difficult {
+.difficulty-option.selected#hard {
     background-color: rgb(248, 39, 2);
 }
 .button {
@@ -249,6 +249,9 @@ select {
 .answer.correct{
     animation: correct 3s ease forwards;
 }
+.answer.rightAnswer{
+    animation: rightAnswer 3s ease forwards;
+}
 @keyframes correct {
     0%,
     22%,
@@ -282,5 +285,11 @@ select {
     62%,
     100% {
         background: rgb(216, 3, 3);
+    }
+}
+@keyframes rightAnswer {
+    0%,
+    100% {
+        background: rgb(1, 161, 1);
     }
 }
