@@ -20,9 +20,12 @@
                     <label for="category-options">Category</label></br>
                     <select id="category-options" name="Category" class="input-items">
                         <option value="" disabled selected>SELECT A CATEGORY</option>
+                        <option value="Art">Art</option>
                         <option value="Entertainment">Entertainment</option>
+                        <option value="General Knowledge">General Knowledge</option>
                         <option value="Science">Science</option>
                         <option value="Sports">Sports</option>
+                        <option value="Technology">Technology</option>
                     </select>
                 </div>
                 <div id="difficulty-section">
@@ -42,8 +45,9 @@
         <div id="game-page" class="hidden">
 
             <div id="player-details">
-                <!-- <div id="player-name" style="text-transform: uppercase; margin-top: 22px;" class="details">Name</div> -->
-                <button type="button" id="exit" class="circle"><</button>
+                <div id="exitButton">
+                    <img src="exit.png" id="image">
+                </div>
 
                 <div id="question-type" class="details">
                     <span id="category-selected">Category : </span>

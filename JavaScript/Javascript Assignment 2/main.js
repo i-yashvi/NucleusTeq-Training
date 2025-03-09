@@ -55,20 +55,25 @@ function startGame() {
     startGamePage.style.display = "none";
     gamePage.classList.remove("hidden");
     
+    questionPrompt.innerHTML = "Just wait!";
+
     fetchQuestions();
 }
 
 // Fetch questions from API
 async function fetchQuestions() {
     let categoryMap = {
+        "Art": 25,
         "Entertainment": 11,
+        "General Knowledge" : 9,
         "Science": 17,
-        "Sports": 21
+        "Sports": 21,
+        "Technology": 18
     };
 
     let categoryId = categoryMap[selectedCategory];
     let url = `${API_BASE_URL}&category=${categoryId}&difficulty=${selectedDifficulty}`;
-    
+
     try {
         let response = await fetch(url);
         let data = await response.json();
@@ -105,30 +110,28 @@ function loadQuestion() {
     startTimer();
 }
 
-// Check answer with animation, then show the correct answer without animation
+// Check answer with animation
 function checkAnswer(selectedOption, selected, correct) {
     if (answered) return; // Prevent multiple selections
 
     clearInterval(timerInterval);
     answered = true;
 
-    // Step 1: Animate the selected answer to indicate correctness
     if (selected === correct) {
-        selectedOption.classList.add("correct"); // Blue animation for correct answer
+        selectedOption.classList.add("correct"); 
         setTimeout(() => {
             yourScore++; 
             currentPoints.textContent = yourScore;
         }, 2500);
     } else {
-        selectedOption.classList.add("wrong"); // Red animation for incorrect answer
+        selectedOption.classList.add("wrong"); 
     }
 
-    // Step 2: After animation completes, highlight the correct answer without animation
     setTimeout(() => {
         answerOptions.forEach(option => {
-            option.classList.remove("active", "wrong", "correct", "rightAnswer"); // Remove animations
+            option.classList.remove("active", "wrong", "correct", "rightAnswer"); 
             if (option.textContent === correct) {
-                option.classList.add("rightAnswer"); // Just highlight the correct answer
+                option.classList.add("rightAnswer"); 
             }
         });
     }, 3000); // Delay to allow animation
@@ -162,9 +165,9 @@ function showCorrectAnswer() {
     let correctAnswer = questions[currentQuestionNumber].correct_answer;
 
     answerOptions.forEach(option => {
-        option.classList.remove("active", "wrong", "correct"); // Remove animations
+        option.classList.remove("active", "wrong", "correct"); 
         if (option.textContent === correctAnswer) {
-            option.classList.add("rightAnswer"); // Highlight correct answer
+            option.classList.add("rightAnswer"); 
         }
     });
 
@@ -175,7 +178,7 @@ function showCorrectAnswer() {
 
 // Load next question when "Next" is clicked
 function loadNextQuestion() {
-    if (!answered) return; // Ensure the user sees the answer feedback before moving on
+    if (!answered) return; 
 
     currentQuestionNumber++;
     loadQuestion();
@@ -187,9 +190,9 @@ function endGame() {
     endGamePage.classList.remove("hidden");
 
     let message;
-    if (yourScore >= 8) message = "Excellent job!";
-    else if (yourScore >= 4) message = "Good job!";
-    else message = "You can do better!";
+    if (yourScore >= 8) message = "Excellent job,";
+    else if (yourScore >= 4) message = "Good job,";
+    else message = "You can do better,";
 
     document.getElementById("message-display").textContent = message;
     document.getElementById("player-name-message").textContent = nameOfPlayer;
@@ -200,7 +203,4 @@ function endGame() {
 startButton.addEventListener("click", startGame);
 nextButton.addEventListener("click", loadNextQuestion);
 restartButton.addEventListener("click", () => window.location.reload());
-document.getElementById("exit").addEventListener("click", () => window.location.reload());
-
-
-
+document.getElementById("exitButton").addEventListener("click", () => window.location.reload());
