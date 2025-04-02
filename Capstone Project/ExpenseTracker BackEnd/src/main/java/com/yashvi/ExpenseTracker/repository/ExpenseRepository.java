@@ -18,7 +18,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     // Fetch expenses for a specific department (for Manager dashboard)
     List<Expense> findByDepartment_DeptId(Long deptId);
     // Fetch approved expenses (for Finance Team dashboard)
-    @Query("SELECT e FROM Expense e WHERE e.expenseStatus = 'APPROVED' OR e.expenseStatus = 'PAID'")
+    @Query("SELECT e FROM Expense e WHERE (e.expenseStatus = 'APPROVED' OR e.expenseStatus = 'PAID') OR e.user.role = 'MANAGER'")
     List<Expense> findApprovedExpensesForFinanceTeam();
 
 }

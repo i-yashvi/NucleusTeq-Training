@@ -63,6 +63,7 @@ public class ExpenseService {
         return expenseRepository.findApprovedExpensesForFinanceTeam();
     }
 
+
     // Add new expense
     public void addExpense(User userId, Department deptId, String expenseName, Double expenseAmount,
                            LocalDate expenseDate, Type expenseType, MultipartFile expenseReceipt)
@@ -76,28 +77,45 @@ public class ExpenseService {
         expenseRepository.save(expense);
     }
 
-    // Edit Expense (Only if status is PENDING)
-    public ResponseEntity<String> editExpense(Long expenseId, Expense updatedExpense) {
+
+    public byte[] getExpenseReceipt(Long expenseId) {
+        return expenseRepository.findById(expenseId)
+                .map(Expense::getExpenseReceipt)
+                .orElse(null);
+    }
+
+
+    public void editExpense(Long expenseId, User userId, Department deptId, String expenseName, Double expenseAmount,
+                                              Type expenseType, LocalDate expenseDate, MultipartFile expenseReceipt) throws IOException {
         Optional<Expense> existingExpense = expenseRepository.findById(expenseId);
 
         if (existingExpense.isEmpty()) {
-            return ResponseEntity.badRequest().body("Expense not found!");
+            ResponseEntity.badRequest().body("Expense not found!");
         }
 
         Expense expense = existingExpense.get();
 
         if (expense.getExpenseStatus() != Status.PENDING) {
-            return ResponseEntity.badRequest().body("Only PENDING expenses can be edited!");
+            ResponseEntity.badRequest().body("Only PENDING expenses can be edited!");
         }
 
-        expense.setExpenseName(updatedExpense.getExpenseName());
-        expense.setExpenseAmount(updatedExpense.getExpenseAmount());
-        expense.setExpenseType(updatedExpense.getExpenseType());
-        expense.setExpenseDate(updatedExpense.getExpenseDate());
-        expense.setExpenseReceipt(updatedExpense.getExpenseReceipt());
+        // Update expense details
+        expense.setExpenseName(expenseName);
+        expense.setExpenseAmount(expenseAmount);
+        expense.setExpenseType(expenseType);
+        expense.setExpenseDate(expenseDate);
+
+        // Update receipt only if a new file is uploaded
+        try {
+            if (expenseReceipt != null && !expenseReceipt.isEmpty()) {
+                expense.setExpenseReceipt(expenseReceipt.getBytes());
+            }
+        } catch (IOException e) {
+            ResponseEntity.badRequest().body("Error processing receipt file.");
+        }
 
         expenseRepository.save(expense);
-        return ResponseEntity.ok("Expense updated successfully!");
+        ResponseEntity.ok("Expense updated successfully!");
     }
 
 

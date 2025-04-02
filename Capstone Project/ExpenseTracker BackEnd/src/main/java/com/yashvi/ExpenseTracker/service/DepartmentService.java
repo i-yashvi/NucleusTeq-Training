@@ -21,11 +21,6 @@ public class DepartmentService {
         this.departmentRepository = departmentRepository;
     }
 
-    // Get all departments
-    public List<Department> getAllDepartments() {
-        return departmentRepository.findAll();
-    }
-
     // Get a department
     public Department getDepartment(Long deptId) {
         return departmentRepository.findById(deptId)

@@ -2,6 +2,7 @@ package com.yashvi.ExpenseTracker.controller;
 
 import com.yashvi.ExpenseTracker.enums.DepartmentName;
 import com.yashvi.ExpenseTracker.models.Department;
+import com.yashvi.ExpenseTracker.repository.DepartmentRepository;
 import com.yashvi.ExpenseTracker.service.DepartmentService;
 import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
 import org.springframework.http.ResponseEntity;
@@ -9,21 +10,25 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/departments")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
+    private final DepartmentRepository departmentRepository;
 
-    public DepartmentController(DepartmentService departmentService) {
+    public DepartmentController(DepartmentService departmentService, DepartmentRepository departmentRepository) {
         this.departmentService = departmentService;
+        this.departmentRepository = departmentRepository;
     }
 
     // Get all departments
     @GetMapping
-    public ResponseEntity<String> getAllDepartments() {
-        return ResponseEntity.ok("All departments: ");
+    public ResponseEntity<List<Department>> getAllDepartments() {
+        return ResponseEntity.ok(departmentRepository.findAll());
     }
 
     // Get a department
@@ -31,6 +36,21 @@ public class DepartmentController {
     public ResponseEntity<Department> getDepartment(@PathVariable Long deptId) {
         Department department = departmentService.getDepartment(deptId);
         return ResponseEntity.ok(department);
+    }
+
+    // Create a new Department
+    @PostMapping("/create")
+    public ResponseEntity<?> addDepartment(@RequestBody Department department) {
+        Optional<Department> existingDept = departmentRepository.findByDepartmentName(department.getDepartmentName());
+
+        if (existingDept.isPresent()) {
+            return ResponseEntity.badRequest().body("Department already exists!");
+        }
+
+        Department newDepartmentName = new Department(department.getDepartmentName());
+        departmentRepository.save(newDepartmentName);
+        return ResponseEntity.ok(department);
+
     }
 
     // Delete a department
@@ -95,7 +115,7 @@ public class DepartmentController {
     public ResponseEntity<String> createOrUpdateDepartment(@RequestBody Department department) {
         try {
             departmentService.createOrUpdateDepartment(department);
-            return ResponseEntity.ok("Expense added successfully.");
+            return ResponseEntity.ok("Budget added successfully.");
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Failed to add department budget: " + e.getMessage());
         }

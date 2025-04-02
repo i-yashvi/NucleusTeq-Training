@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
-@Table(name= "users")
+@Table(name= "users", uniqueConstraints = {
+@UniqueConstraint(columnNames = {"department_name", "role"})
+})
 public class User {
 
     @Id

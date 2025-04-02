@@ -75,6 +75,7 @@ public class UserService {
         // Prepare response with required fields
         Map<String, Object> response = new HashMap<>();
         response.put("userId", user.getUserId());
+        response.put("userName", user.getFullName());
         response.put("deptId", deptId);
         response.put("deptName", user.getDepartmentName().name());
         response.put("role", user.getRole().name());

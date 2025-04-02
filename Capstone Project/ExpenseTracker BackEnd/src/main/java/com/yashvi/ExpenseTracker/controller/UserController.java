@@ -1,11 +1,12 @@
 package com.yashvi.ExpenseTracker.controller;
 
+import com.yashvi.ExpenseTracker.enums.Role;
 import com.yashvi.ExpenseTracker.exceptions.UserAlreadyExistsException;
 import com.yashvi.ExpenseTracker.exceptions.ValidationException;
 import com.yashvi.ExpenseTracker.models.User;
+import com.yashvi.ExpenseTracker.repository.UserRepository;
 import com.yashvi.ExpenseTracker.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -22,9 +23,10 @@ import java.util.Objects;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.userService = userService;
     }
 
@@ -47,6 +49,12 @@ public class UserController {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", errorMessage));
         }
         try {
+            if (user.getRole() == Role.MANAGER) {
+                boolean managerExists = userRepository.existsByDepartmentNameAndRole(user.getDepartmentName(), Role.MANAGER);
+                if (managerExists) {
+                    return ResponseEntity.badRequest().body("A manager already exists for this department!");
+                }
+            }
             User registeredUser = userService.registerUser(user);
             return ResponseEntity.ok(Collections.singletonMap("message", "Signup successful"));
         } catch (UserAlreadyExistsException | ValidationException e) {

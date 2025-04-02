@@ -5,8 +5,9 @@ import com.yashvi.ExpenseTracker.enums.Type;
 import com.yashvi.ExpenseTracker.models.Department;
 import com.yashvi.ExpenseTracker.models.Expense;
 import com.yashvi.ExpenseTracker.models.User;
+import com.yashvi.ExpenseTracker.repository.ExpenseRepository;
 import com.yashvi.ExpenseTracker.service.ExpenseService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,14 +15,17 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/expenses")
 public class ExpenseController {
     private final ExpenseService expenseService;
+    private final ExpenseRepository expenseRepository;
 
-    public ExpenseController(ExpenseService expenseService) {
+    public ExpenseController(ExpenseService expenseService, ExpenseRepository expenseRepository) {
         this.expenseService = expenseService;
+        this.expenseRepository = expenseRepository;
     }
 
     // Get all expenses
@@ -80,10 +84,41 @@ public class ExpenseController {
         }
     }
 
+    @GetMapping("/receipt/{expenseId}")
+    public ResponseEntity<byte[]> getExpenseReceipt(@PathVariable Long expenseId) {
+        byte[] receiptData = expenseService.getExpenseReceipt(expenseId);
+
+        if (receiptData == null || receiptData.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF); // Adjust if using images
+        headers.setContentDisposition(ContentDisposition.inline() // Open in browser
+                .filename("receipt_" + expenseId + ".pdf")
+                .build());
+
+        return ResponseEntity.ok().headers(headers).body(receiptData);
+    }
+
     // Edit Expense (Allowed only if status is PENDING)
-    @PutMapping("/edit/{expenseId}")
-    public ResponseEntity<String> editExpense(@PathVariable Long expenseId, @RequestPart Expense updatedExpense) {
-        return expenseService.editExpense(expenseId, updatedExpense);
+    @PutMapping("/edit/{userId}/{deptId}/{expenseId}")
+    public ResponseEntity<String> editExpense(
+            @PathVariable Long expenseId,
+            @PathVariable User userId,
+            @PathVariable Department deptId,
+            @RequestParam String expenseName,
+            @RequestParam Double expenseAmount,
+            @RequestParam Type expenseType,
+            @RequestParam LocalDate expenseDate,
+            @RequestParam(required = false) MultipartFile expenseReceipt) {
+
+        try {
+            expenseService.editExpense(expenseId, userId, deptId, expenseName, expenseAmount, expenseType, expenseDate, expenseReceipt);
+            return ResponseEntity.ok("Expense added successfully.");
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Failed to add expense: " + e.getMessage());
+        }
     }
 
     // Delete Expense (Allowed only if status is PENDING, REJECTED, or PAID)
