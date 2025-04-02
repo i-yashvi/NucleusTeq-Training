@@ -13,34 +13,17 @@
             <p class="logo">Expense Tracker</p>
             <div class="user" id="user-profile">
                 <img class="user-image" src="../images/user.svg"/>
+                <p id="username" class="logo user-name"></p>
             <p class="logo link" id="logout">Logout</p>                
         </div>
         </div>
     </header>
     <main>
         <div class="dashboard" id="finance-team-dashboard">
-            <div class="my-row fin">
-                <div class="my-card fin">
-                    <h2 class="card-title budget-card-title" id="HR">HR Department</h2>
-                    <p><span class="budget-title">Current Budget: </span>₹<span class="budget" id="hrDeptCurrBud">Loading...</span></p>
-                    <p><span class="budget-title">End Date: </span><span class="budget" id="hrDeptBudEnd">Loading...</span></p>
-                    <div class="btn btn-blue add-budget-btn" data-dept-name="HR" id="add-budget-button-hr">Add Budget</div>
-                </div>
-
-                <div class="my-card fin">
-                    <h2 class="card-title budget-card-title" id="IT">IT Department</h2>
-                    <p><span class="budget-title">Current Budget: </span>₹<span class="budget" id="itDeptCurrBud">Loading...</span></p>
-                    <p><span class="budget-title">End Date: </span><span class="budget" id="itDeptBudEnd">Loading...</span></p>
-                    <div class="btn btn-blue add-budget-btn" data-dept-name="IT" id="add-budget-button-it">Add Budget</div>
-                </div> 
-
-                <div class="my-card fin">
-                    <h2 class="card-title budget-card-title" id="FINANCE">Finance Department</h2>
-                    <p><span class="budget-title">Current Budget: </span>₹<span class="budget" id="finDeptCurrBud">Loading...</span></p> 
-                    <p><span class="budget-title">End Date: </span><span class="budget" id="finDeptBudEnd">Loading...</span></p>                           
-                    <div class="btn btn-blue add-budget-btn" data-dept-name="FINANCE" id="add-budget-button-fin">Add Budget</div>
-                </div>                
+            <div class="my-row fin-row">
+                <!-- Department cards to be added-->
             </div>
+            <div class="add_dept"><img src="../images/add.svg" id="addDept" width="30" style="cursor: pointer;"></div>
 
             <div style="width: 95%; justify-content: center;">
                 <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 0.5rem;">
@@ -54,6 +37,7 @@
                             <option value="ESSENTIAL">Essential</option>
                             <option value="DISCRETIONARY">Discretionary</option>
                             <option value="HYBRID">Hybrid</option>
+                            <option value="PENDING">Pending</option>
                             <option value="PAID">Paid</option>
                             <option value="APPROVED">Unpaid</option>
                             <option value="FINANCE">Finance Department</option>

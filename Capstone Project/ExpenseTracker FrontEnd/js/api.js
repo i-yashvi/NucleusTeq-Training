@@ -1,7 +1,6 @@
 const BASE_URL = "http://localhost:9090";
 
-// Get User Details
-//user.userId, user.deptId, user.deptName, user.role
+// FUNCTION: Get User Details; user.userId, user.deptId, user.deptName, user.role
 function getUser() {
     try {
         const user = localStorage.getItem("user");
@@ -18,12 +17,21 @@ function logout() {
     window.location.href = "/index.html"; // Redirect to login after logout
 }
 
+function toTitleCase(text) {
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+}
+
+function getFirstName(fullName) {
+    const nameParts = fullName.split(' ');
+    return nameParts[0];
+}
+
 // FUNCTION: Redirect Based on User Role (Reusable)
 function redirectToDashboard() {
     const user = getUser();
     console.log("User: ", user);
-    const currentPage = window.location.pathname;
 
+    const currentPage = window.location.pathname;
     if(!user) {
         window.location.href = "/index.html";
         return;
@@ -48,7 +56,7 @@ function redirectToDashboard() {
             break;
         default:
             alert("Unknown role! Contact admin.");
-            logout(); // Clear storage and go to login
+            logout(); // Clears storage and goes to login
     }
 
 }
@@ -69,25 +77,49 @@ function listenForExpenseUpdates() {
     };
 } */
 
-//---------------------------------------------------------------------------------------------
+//------------------------------------------------ API ---------------------------------------------------
 
 // Edit Expense
-/* async function apiEditExpense(expenseId) {
-    const updatedAmount = parseFloat(prompt("Enter new amount:"));
-    if (!updatedAmount) return;
+async function apiEditExpense(expenseData) {
+    const user = getUser();
+    const formData = new FormData();
+    formData.append("expenseName", expenseData.expenseName);
+    formData.append("expenseAmount", expenseData.expenseAmount);
+    formData.append("expenseType", expenseData.expenseType);
+    formData.append("expenseDate", expenseData.expenseDate);
 
-    try {
-        await fetch(`${BASE_URL}/expenses/edit/${expenseId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ amount: updatedAmount })
-        });
-    } catch (error) {
-        console.error("Error editing expense:", error);
+    if (expenseData.expenseReceipt) {
+        formData.append("expenseReceipt", expenseData.expenseReceipt);
     }
-} */
 
-//---------------------------------------------------------------------------------------------
+    //console.log("expense", expenseData.expenseId);
+    const response = await fetch(`${BASE_URL}/expenses/edit/${user.userId}/${user.deptId}/${expenseData.expenseId}`, {
+        method: "PUT",
+        body: formData
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to edit expense");
+    }
+
+    return await response.text();
+}
+
+async function fetchReceipt(expenseId) {
+    try {
+        const response = await fetch(`${BASE_URL}/expenses/receipt/${expenseId}`);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch receipt: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        return window.URL.createObjectURL(blob);
+    } catch (error) {
+        console.error("Error fetching receipt:", error);
+        return null; // Return null if there's an issue
+    }
+}
 
 // API to Add Budget to a Department
 async function apiAddBudget(budgetData) {
@@ -140,8 +172,6 @@ async function apiAddExpense(expenseData) {
     }
 };
 
-//---------------------------------------------------------------------------------------------
-
 // API to Update Expense Status [PENDING -> APPROVED/REJECTED, APPROVED -> PAID]
 async function apiUpdateExpenseStatus (expenseId, newStatus) {
     try {
@@ -162,10 +192,8 @@ async function apiUpdateExpenseStatus (expenseId, newStatus) {
     }
 };
 
-//-----------------------------------------------------------------------------
-
 // API to Signup User
-async function signupApi(userData) {
+async function signupApi(userData) { 
     try {
         const response = await fetch(`${BASE_URL}/users/signup`, {
             method: "POST",
@@ -175,21 +203,25 @@ async function signupApi(userData) {
             body: JSON.stringify(userData)
         });
 
-        let responseData;
-        try {
-            responseData = await response.json();
-        } catch (error) {
-            responseData = { error: "Unexpected server response" };
+        // Read response only once
+        let responseText;
+        const contentType = response.headers.get("content-type");
+
+        if (contentType && contentType.includes("application/json")) {
+            responseText = await response.json(); // Parse as JSON
+        } else {
+            responseText = await response.text(); // Read as plain text
         }
 
         if (!response.ok) {
-            throw new Error(responseData.error || "Signup failed. Please try again.");
+            throw new Error(responseText.message || responseText || "Signup failed!");
         }
 
-        return responseData;
+        return responseText;
     } 
     catch (error) {
         console.error("Signup error:", error.message);
+        alert(error.message); // Show error message in alert
         throw error;
     }
 }
@@ -251,6 +283,38 @@ async function apiFetchExpenses() {
     }
 }
 
+async function apiFetchDepartments() {
+    try {
+        const response = await fetch(`${BASE_URL}/departments`);
+        if (!response.ok) throw new Error("Failed to load departments");
+        return response.json();
+    }
+    catch (error) {
+        console.error("Error fetching departments:", error);
+    }
+}
+
+async function apiCreateDepartment(formattedDeptName) {
+    try {
+        const response = await fetch(`${BASE_URL}/departments/create`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ departmentName: formattedDeptName })
+        });
+
+        if (!response.ok) {
+            const errorMsg = await response.text();
+            alert(errorMsg || "Failed to add department!");
+            return;
+        }
+
+        alert(`Department '${formattedDeptName}' added successfully!`);
+    } catch (error) {
+        console.error("Error adding department:", error);
+        alert("Error adding department!");
+    }
+}
+
 // API to Fetch Current Budget of Department
 async function apiFetchCurrentBudgetByName(departmentName) {
     const user = getUser();
@@ -263,7 +327,7 @@ async function apiFetchCurrentBudgetByName(departmentName) {
             return null; // Returns null when department is not found
         }
         const currentBudget = await response.json();
-        console.log("Current Budget", user.deptName, currentBudget);
+        console.log("Current Budget", departmentName, currentBudget);
         return currentBudget;
     } catch (error) {
         console.error("Error fetching assigned budget:", error);
@@ -283,30 +347,10 @@ async function apiFetchAssignedBudgetByName(departmentName) {
             return null; // Returns null when department is not found
         }
         const assignedBudget = await response.json();
-        console.log("Assigned Budget", user.deptName, assignedBudget);
+        console.log("Assigned Budget", departmentName, assignedBudget);
         return assignedBudget;
     } catch (error) {
         console.error("Error fetching assigned budget:", error);
-        return null;
-    }
-}
-
-// API to Fetch Assigned Budget of Department
-async function apiFetchEndDateByName(departmentName) {
-    const user = getUser();
-    if (!user) return;
-
-    try {
-        const response = await fetch(`${BASE_URL}/departments/endDate/${departmentName}`);
-        if (!response.ok) {
-            console.warn(`No assigned budget found for ${departmentName}`);
-            return null; // Returns null when department is not found
-        }
-        const endDate = await response.json();
-        console.log("End Date", user.deptName, endDate);
-        return endDate;
-    } catch (error) {
-        console.error("Error fetching budget end date:", error);
         return null;
     }
 }
@@ -332,7 +376,6 @@ async function apiTotalExpense() {
 
 // API to Delete Expense on Employee Dashboard
 async function apiDeleteExpense(expenseId) {
-    if (!confirm("Are you sure you want to delete this expense?")) return;
 
     try {
         const response = await fetch(`${BASE_URL}/expenses/delete/${expenseId}`, {

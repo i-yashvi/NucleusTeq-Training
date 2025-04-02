@@ -24,23 +24,22 @@ document.addEventListener("DOMContentLoaded", function (event) {
         signupPage.style.display = "flex";
         document.getElementById("login-form").reset();
     })
+    
 
     // SIGNUP FUNCTIONALITY
     signupUsingEmailButton.addEventListener("click", async function() {
-        // Get form input values
         const nameInput = document.getElementById("name-input");
         const emailInput = document.getElementById("email-input");
         const passwordInput = document.getElementById("password-input");
         const roleOptions = document.getElementById("select-role");
         const departmentOptions = document.getElementById("select-dept");
-
+    
         const fullName = nameInput.value.trim();
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
         const role = roleOptions.value;
         const departmentName = departmentOptions.value;
-
-        // Validation checks
+    
         if (!fullName || !email || !password || !role || !departmentName) {
             alert("All fields are mandatory!");
             return;
@@ -49,22 +48,21 @@ document.addEventListener("DOMContentLoaded", function (event) {
             alert("Password must be at least 8 characters long!");
             return;
         }
-
-        // Prepare user data for API call
+    
         const userData = { fullName, email, password, role, departmentName };
-
+    
         try {
-            const response = await signupApi(userData); // Call function from api.js
+            await signupApi(userData);  // Call function from api.js
             alert("Signup successful! Redirecting to login...");
-
+    
             signupPage.style.display = "none";
             loginPage.style.display = "flex";
             document.getElementById("signup-form").reset();
-            
         } catch (error) {
-            alert(error.message);
+            console.error("Signup failed:", error.message);
         }
     });
+    
 
     // LOGIN FUNCTIONALITY
     loginUsingEmailButton.addEventListener("click", async function() {
@@ -78,12 +76,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }
 
         try {
-            const response = await loginApi({ email, password }); // Call function from api.js
+            const response = await loginApi({ email, password });  // Call function from api.js
             
-            localStorage.setItem("user", JSON.stringify(response)); // Store user data in localStorage
+            localStorage.setItem("user", JSON.stringify(response));  // Store user data in localStorage
             alert("Login successful! Redirecting to dashboard...");
             
-            redirectToDashboard(); // Redirect based on role
+            redirectToDashboard();  // Redirect based on role
     
         } catch (error) {
             alert(error.message);

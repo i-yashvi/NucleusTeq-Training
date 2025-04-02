@@ -1,19 +1,3 @@
-
-/* const addBudgetButtons = document.querySelectorAll(".add-budget");
-addBudgetButtons.forEach(button => {
-    button.addEventListener("click", openBudgetModal);
-});
-const addBudgetList = document.querySelectorAll(".add-budget-list");
-addBudgetList.forEach(button => {
-    button.addEventListener('click', function() {
-        alert("Budget added successfully!");
-        addBudgetData();
-        clearObject();
-    });
-}); */
-
-//-------------------------------------------------------------------------
-
 redirectToDashboard(); 
 
 let expenses = [];
@@ -24,41 +8,50 @@ let currentBudgetIT = 0;
 let assignedBudgetFIN = 0;
 let currentBudgetFIN = 0;
 
+fetchAndDisplayDepartments();
 fetchAndDisplayExpenses();
-fetchAndDisplayBudget();
 
 async function fetchAndDisplayExpenses() {
-    expenses = await apiFetchExpenses(); // Store fetched expenses in global array
-    updateExpenseTable(expenses); // Dynamically update table with latest data 
+    const user = getUser();
+    document.getElementById("username").textContent = getFirstName(user.userName);
+    currentBudget = await apiFetchCurrentBudgetByName(user.deptName);
+    expenses = await apiFetchExpenses(); 
+    updateExpenseTable(expenses); 
 }
 
-async function fetchAndDisplayBudget() {
-    const deptHR ="HR";
-    const deptIT ="IT";
-    const deptFIN ="FINANCE";
+async function fetchAndDisplayDepartments() {
 
-    budgetEndDateHR = await apiFetchEndDateByName(deptHR);
-    document.getElementById("hrDeptBudEnd").textContent = budgetEndDateHR;
+    const departments = await apiFetchDepartments();
 
-    currentBudgetHR = await apiFetchCurrentBudgetByName(deptHR);
-    document.getElementById("hrDeptCurrBud").textContent = currentBudgetHR;
+    const container = document.querySelector(".my-row.fin-row");
+    container.innerHTML = ""; 
 
-    budgetEndDateIT = await apiFetchEndDateByName(deptIT);
-    document.getElementById("itDeptBudEnd").textContent = budgetEndDateIT;
+    departments.forEach(dept => {
+        const deptCard = document.createElement("div");
+        deptCard.classList.add("my-card");
+        const deptName = toTitleCase(dept.departmentName);
+        const formattedDeptName = deptName.trim().toUpperCase();
 
-    currentBudgetIT = await apiFetchCurrentBudgetByName(deptIT);
-    document.getElementById("itDeptCurrBud").textContent = currentBudgetIT;
+        deptCard.innerHTML = `
+            <h2 class="card-title">${deptName} Department</h2>
+            <p><span class="budget-title">Current Budget: </span>₹<span class="budget" id="${formattedDeptName.toLowerCase()}DeptCurrBud">${dept.currentBudget || "0"}</span></p>
+            <p><span class="budget-title">End Date: </span><span class="budget" id="${formattedDeptName.toLowerCase()}DeptBudEnd">${dept.endDate || "Not Set"}</span></p>
+            <div class="btn btn-blue add-budget-btn" data-dept-name="${dept.departmentName}"><img src="../images/add_2.svg" style="margin-right: 0.5rem;"/>Add Budget</div>
+        `;
 
-    budgetEndDateIT = await apiFetchEndDateByName(deptFIN);
-    document.getElementById("finDeptBudEnd").textContent = budgetEndDateIT;
+        container.appendChild(deptCard);
 
-    currentBudgetFIN = await apiFetchCurrentBudgetByName(deptFIN);
-    document.getElementById("finDeptCurrBud").textContent = currentBudgetFIN;
+        deptCard.querySelector(".add-budget-btn").addEventListener("click", function () {
+            sessionStorage.setItem("selectedDeptName", formattedDeptName);
+            console.log(formattedDeptName);
+            openBudgetModal();
+        });
+    });
 }
 
-function updateExpenseTable(expenseList) {
+async function updateExpenseTable(expenseList) {
     let tableBody = document.getElementById("table-body");
-    tableBody.innerHTML = ""; // Clear existing rows
+    tableBody.innerHTML = ""; 
     if (expenseList.length === 0) {
         tableBody.innerHTML = `
             <tr>
@@ -69,36 +62,69 @@ function updateExpenseTable(expenseList) {
         `; return; 
     }
 
-    expenseList.forEach(expense => {
+    for (const expense of expenseList) {
         document.getElementById("finance-table").style.borderBottom='1.5px solid var(--theme)';
-
         const row = document.createElement("tr");
-        let receiptHTML = expense.expenseReceipt ? 
-        `<a href="${expense.expenseReceipt}" target="_blank">View</a>` : "—";
+        
+        let receiptHTML = "-"; 
+        if (expense.expenseReceipt) {
+            const receiptUrl = await fetchReceipt(expense.expenseId);
+            if (receiptUrl) {
+                receiptHTML = `
+                    <a href="${receiptUrl}" target="_blank"><img class="file-image" src="../images/file_save.svg" width="25"/></a>
+                `;
+            }
+        }
 
+        const expenseType = toTitleCase(expense.expenseType);
         row.innerHTML = `
-            <td>${expense.expenseName}</td>
+            <td style="text-align: start;">${expense.expenseName}</td>
             <td>${expense.expenseAmount}</td>
-            <td>${expense.expenseType}</td>
+            <td>${expenseType}</td>
             <td>${expense.expenseDate}</td>
             <td>${receiptHTML}</td>
             <td>${expense.department.departmentName}</td>
         `;
-        if(expense.expenseStatus === "APPROVED") {
+
+        if(expense.expenseStatus == "APPROVED") {
             row.innerHTML += `
             <td style="width: 100%; display: flex; justify-content: center; align-items: center; border-left: 0; border-top: 0">
-                <button class="btn pay-btn" onclick="updateStatus(${expense.expenseId}, 'PAID')" style="width:55%;" id="btnId1">Pay</button>
+                <button class="btn" onclick="updateStatus(${expense.expenseId}, 'PAID')" style="width:40%;" id="btnId1">Pay</button>
             </td>
         `;
         }
-        else row.innerHTML += `<td>${expense.expenseStatus}</td>`;
+        else if(expense.expenseStatus == "PENDING") {
+            row.innerHTML += `
+            <td><div class="btn-group2">
+                <button class="btn" onclick="updateStatus(${expense.expenseId}, 'APPROVED')" id="btnId1">Approve</button>
+                <button class="btn" onclick="updateStatus(${expense.expenseId}, 'REJECTED')" id="btnId2">Reject</button>
+            </div></td>
+        `;
+        }
+        else {
+            const expenseStatus = toTitleCase(expense.expenseStatus);
+            row.innerHTML += `<td>${expenseStatus}</td>`;
+        }
+
         tableBody.appendChild(row);
-    });
+    };
 }
 
 async function updateStatus(expenseId, newStatus) {
     try {
-        if (!confirm("Are you sure you want to pay this expense?")) return;
+        let confirmation = "";
+        if (newStatus == 'APPROVED') {
+            confirmation = confirm(`Are you sure you want to APPROVE this expense?`);
+            if (!confirmation) return;
+        }
+        else if (newStatus == 'REJECTED') {
+            confirmation = confirm(`Are you sure you want to REJECT this expense?`);
+            if (!confirmation) return;
+        }
+        else {
+            (confirmation = confirm("Are you sure you want to PAY this expense?"));
+            if (!confirmation) return;
+        }
         const response = await apiUpdateExpenseStatus(expenseId, newStatus);
         
         await fetchAndDisplayExpenses();
@@ -110,24 +136,18 @@ async function updateStatus(expenseId, newStatus) {
     }
 };
 
-/* async function resetData() {
-    const user = getUser();
-    try {
-        if (!user) {
-            console.error("User not found. Redirecting to login...");
-            window.location.href = "/index.html";
-            return;
-        }
-        setTimeout(() => {
-            fetchAndDisplayBudget();
-            fetchAndDisplayExpenses();
-        }, 500);
-    } 
-    catch (error) {
-        console.error("Error refreshing dashboard:", error);
-        alert("Failed to refresh data.");
+document.getElementById("addDept").addEventListener("click", async function () {
+    const deptName = prompt("Enter new department name:");
+
+    if (!deptName || deptName.trim() === "") {
+        alert("Department name cannot be empty!");
+        return;
     }
-} */
+    const formattedDeptName = deptName.trim().toUpperCase();
+
+    await apiCreateDepartment(formattedDeptName);
+    await fetchAndDisplayDepartments();
+});
 
 document.getElementById("searchInput").addEventListener("input", (event) => {
     const searchQuery = event.target.value;
@@ -145,11 +165,11 @@ document.getElementById("filterSelect").addEventListener("change", () => {
     else if (["HR", "IT", "FINANCE"].includes(selectedFilter)) {
         filteredExpenses = filterExpenses(expenses, "department.departmentName", selectedFilter);
     } 
-    else if (["APPROVED", "PAID"].includes(selectedFilter)) {
+    else if (["APPROVED", "PAID", "PENDING"].includes(selectedFilter)) {
         filteredExpenses = filterExpenses(expenses, "expenseStatus", selectedFilter);
     } 
     else {
-        filteredExpenses = expenses; // Show all if no valid filter
+        filteredExpenses = expenses; 
     }
 
     updateExpenseTable(filteredExpenses);
@@ -159,18 +179,9 @@ document.querySelectorAll('input[name="sort1"]').forEach(radio => {
     radio.addEventListener("change", () => handleSortSelection(expenses));
 });
 
-
-document.querySelectorAll(".add-budget-btn").forEach(button => {
-    const deptName = button.getAttribute("data-dept-name");
-    //console.log(deptName);
-    sessionStorage.setItem("selectedDeptName", deptName);
-    button.addEventListener("click", openBudgetModal);
-});
-
 document.querySelectorAll(".add-budget-list").forEach(button => {
     button.addEventListener('click', function() {
         addBudget();
-        //clearObject();
     });
 }); 
 

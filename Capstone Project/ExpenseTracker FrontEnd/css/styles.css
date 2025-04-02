@@ -14,8 +14,6 @@ html, body {
     flex-direction: column;
 }
 body{
-    /* background-color: var(--black);
-    color: var(--white); */
     font-family: "Montserrat", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -44,6 +42,7 @@ input {
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
+    margin-bottom: 0.5rem;
 }
 .logo{
     color: var(--white);
@@ -62,12 +61,16 @@ input {
 .user {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
 }
 .user-img {
     height: 1.5rem; 
     width: 1.5rem;
     border-radius: 50%;
+} 
+.user-name {
+    opacity: 0.8;
+    font-size: 1.1rem;
+    margin: 0 0.8rem 0 0.2rem;
 }
 
 .wrapper{
@@ -170,33 +173,45 @@ input {
 .my-row{
     width: 95%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+    gap: 5%;
 }
 .my-card{
-    background-color: var(--white);
-    color: var(--black);
     box-shadow: var(--shadow);
-    margin: 2.5rem 0 3rem 0;
-    padding: 2% 2.25% 0.3% 2.25%;
     border-radius: 0.5rem;
-    min-width: 38%;
+    flex: 1;
+    padding: 1rem 1.5rem 0.3rem 1.5rem;
+    min-width: 38%; 
+    margin-top: 2rem;
 }
 .my-card p {
     margin: 0;
     margin-bottom: 1.4rem;
 }
-.card-title{
+.card-title {
     font-weight: 550;
     font-size: 1.2rem;
     margin: 0;
     margin-bottom: 1rem;
 }
-.fin{
-    min-width: 26%;
-    gap: 4%;
+.fin-row {
+    margin-bottom: 0;
 }
-
+#addDept:hover {
+    filter: brightness(0) saturate(100%) invert(63%) sepia(50%) saturate(480%) hue-rotate(50deg) brightness(110%) contrast(101%);
+    border-radius: 50%;
+    transition: all 0.1s;
+}
+.add_dept {
+    width: 95%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0.5rem 0 1rem 0;
+}
 .blur {
     filter: blur(5px);
 }
@@ -206,9 +221,15 @@ input {
     height: 100%;
     top: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
     justify-content: center;
     align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 .modal {
     width: 50%;
@@ -219,6 +240,11 @@ input {
     color: var(--black);
     border-radius: 1rem;
     padding: 0.5rem 1.5rem;
+    animation: slideIn 0.3s ease;
+}
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 .close-modal-btn {
     background: none;
@@ -253,11 +279,46 @@ input {
     padding: 0.2rem 0rem 0.3rem 0rem;
     font-size: 0.8rem;
     outline: none;
-    color: rgba(0, 0, 0, 0.85);
+    transition: all 0.3s ease;
+    background-color: transparent;
 }
 #receipt{
     border-bottom: 0;
     padding-top: 0.5rem;
+}
+.file-input-container {
+    position: relative;
+    width: 100%;
+    margin-top: 0.3rem;
+    height: 1.6rem;
+    overflow: hidden;
+    border: 2px dashed var(--theme);
+    border-radius: 0.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.file-input-container input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+.file-input-container:hover {
+    border-color: #2babab;
+    background-color: rgba(55, 200, 194, 0.1);
+}
+.file-input-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--theme);
+    font-size: 0.8rem;
 }
 #select-type {
     background: none;
@@ -301,6 +362,7 @@ input {
     font-size: 15px;
     border: none;
     outline: none;
+    cursor: pointer;
     font-family: "Montserrat", sans-serif;
 }
 .my-expense-table p {
@@ -315,7 +377,7 @@ input {
     box-shadow: var(--shadow);
 } 
 .radio-input {
-    display: none; /* Hide default radio buttons */
+    display: none; /* Default radio button hidden */
 }  
 .radio-button {
     padding: 1.2vh 1.5vw;
@@ -344,9 +406,10 @@ input {
 }
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     box-shadow: var(--shadow);
-    margin-bottom: 2.5rem;
+    overflow: hidden;
 }
 thead {
     background-color: #fafafa;
@@ -354,17 +417,18 @@ thead {
 tbody {
     width: 100%;
 }
-th, td {
-    padding: 12px;
-    text-align: center;
-    font-size: 15px;
-}
 td {
     padding: 1.7vh 1vw;
+    font-size: 15px;
+    text-align: center;
+    vertical-align: middle;
 }
 th {
-    position: relative;
+    padding: 12px;
+    font-size: 15px;
+    text-align: center;
     background-color: var(--theme);
+    text-transform: uppercase;
     color: var(--white);
 }
 th:not(:last-child)::after{
@@ -380,86 +444,67 @@ th:not(:last-child)::after{
 td:last-child {
     padding: 0;
 }
-/* .action {
-    width: 100%;
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    border-left: 0; 
-    border-top: 0; 
-    gap: 10%;
-} */
-/* .btn1:hover {
-    background-color: green;
-    border-color: green;
+tbody tr {
+    border-bottom: 1px solid #eaeaea;
+    transition: all 0.3s ease;
 }
-.btn2:hover {
-    background-color: red;
-    border-color: red;
-} */
+tbody tr:hover {
+    background-color: rgba(55, 200, 194, 0.1);
+}
+tbody tr:last-child {
+    border-bottom: none;
+}
 
-/* .radio-group1 {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    overflow: hidden;
-} 
-.radio-input1 {
-    display: none; // Hide default radio buttons 
-}  
-.radio-button1 {
-    text-align: center;
-    cursor: pointer;
-}
-.radio-input1:checked + .radio-button1 {
-    color: var(--white);
-    background-color: red;
-    font-weight: 600;
-} */
-
-.btn-group2 {
-    display: flex;
-    justify-content: space-between;
-    margin: 0 12%;
-}
 .btn-group1 {
     display: flex;
-    justify-content: space-around;
-    margin: 0 10%;
+    justify-content: center;
+    align-items: center;
 }
-.btn:not(:disabled)#btnId1:hover {
+.btn-group2 {
+    display: flex;
+    justify-content: space-around;
+    margin: 0 8%;
+} 
+#btnId1:hover {
     background-color: rgb(139, 230, 2);
     border-color: rgb(139, 230, 2); 
     color: var(--white);
-    transition: all 0.2s;
+    transition: all 0.1s;
     cursor: pointer;
 }
-.btn:not(:disabled)#btnId2:hover {
+#btnId2:hover {
     background-color: rgb(248, 39, 2); 
     border-color: rgb(248, 39, 2); 
     color: var(--white);
-    transition: all 0.2s;
+    transition: all 0.1s;
     cursor: pointer;
-}/* 
-.action {
-    width: 40%;
-    margin: 5px 0.5px;
-} */
-/* .btn.selected#btnId1 {
-    background-color: rgb(147, 238, 10); 
-    border-color: rgb(147, 238, 10); 
-    color: white;
 }
-.btn.selected#btnId2 {
-    background-color: rgb(248, 39, 2);
-    border-color: rgb(248, 39, 2);
-    color: white;
-} */
 .budget-title {
     font-weight: 450;
 }
-.budget-card-title {
-    margin-bottom: 20px;
+.btn1 {
+    margin: 0.4rem 0.1rem;
+    padding: 0.3rem !important;
+    cursor: pointer;
+    width: 25;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+#edit:hover {
+    filter: brightness(0) saturate(100%) invert(63%) sepia(50%) saturate(480%) hue-rotate(50deg) brightness(110%) contrast(101%);
+    border: 1px solid;
+    border-radius: 50%;
+    transition: all 0.1s;
+}
+#delete:hover {
+    filter: brightness(0) saturate(100%) invert(21%) sepia(99%) saturate(7493%) hue-rotate(356deg) brightness(95%) contrast(115%);
+    border: 1px solid;
+    border-radius: 50%;
+    transition: all 0.1s;
+}
+.file-image:hover {
+    transform: scale(1.1);
 }
 
 .footer-bottom {
@@ -469,6 +514,7 @@ td:last-child {
     position: sticky;
     font-size: 0.8rem;
     justify-content: center;
+    margin-top: 2.5rem;
 }
 .footer-bottom p {
     margin: 0.5rem 0 0.5rem 0;
@@ -483,22 +529,24 @@ td:last-child {
         padding: 5px;
         font-size: 70%;
     }
-    .btn-group1 {
-        width: 100%; 
-        display: flex; 
-        align-items: center;
-        margin: 0;
-    }
-    .btn-group2 {
-        width: 100%; 
-        display: flex; 
-        align-items: center;
-    }
     #btnId1, #btnId2 {
-        width: 45%;
+        width: 48%;
+        font-size: 0.5rem;
+        padding: 0;
+    }
+    .btn-group1 {
+        margin: 0 0.3rem;
+    }
+    #edit, #delete, .file-image {
+        width: 1.3rem;
+        padding: 0;
+        margin: 0;
     }
     .pay-btn {
         padding: 0.2rem !important;
+    }
+    .file-image {
+        width: 35%;
     }
     .my-card p{
         font-size: 0.85rem;

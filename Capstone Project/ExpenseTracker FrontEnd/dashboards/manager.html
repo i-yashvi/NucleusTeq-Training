@@ -13,8 +13,9 @@
             <p class="logo">Expense Tracker</p>
             <div class="user" id="user-profile">
                 <img class="user-image" src="../images/user.svg"/>
-            <p class="logo link" id="logout-button">Logout</p>                
-        </div>
+                <p id="username" class="logo user-name"></p>
+                <p class="logo link" id="logout-button">Logout</p>                
+            </div>
         </div>
     </header>
     <main>
@@ -23,13 +24,17 @@
                 <div class="my-card">
                     <h2 class="card-title">Department Budget</h2>
                     <p><span class="budget-title">Assigned Budget: </span>₹<span id="assigned-budget">Loading...</span></p>                            
-                    <div class="btn btn-blue" id="reset-data">Reset Data</div>
+                    <div class="btn btn-blue" id="reset-data">
+                        <img src="../images/autorenew.svg" style="margin-right: 0.5rem;"/>
+                        Refresh Data
+                    </div>
                 </div>
 
                 <div class="my-card">
                     <h2 class="card-title">Add Expenses</h2>
                     <p><span class="budget-title">Current Budget: </span>₹<span id="current-budget">Loading...</span></p>
-                    <div class="btn btn-blue" id="add-expense-btn">Add Expense</div>
+                    <div class="btn btn-blue" id="add-expense-btn"><img src="../images/add_2.svg" style="margin-right: 0.5rem;"/>
+                        Add Expense</div>
                 </div>                 
             </div>
 
@@ -76,6 +81,7 @@
                                     <th>Date</th>
                                     <th>Receipt</th>
                                     <th>Employee</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -99,13 +105,14 @@
                     <button class="close-modal-btn">×</button>
                 </div>
                 <form id="expense-form" class="modal-form">
+                    <input type="hidden" id="expenseId" value="0">
                     <div class="input-wrapper" id="input-wrapper">
                         <p class="label-input-modal"><span style="color: red;">* </span>Name</p>
                         <input class="custom-input-modal" id="name" name="expenseName" value required/>
                     </div>
                     <div class="input-wrapper">
                         <p class="label-input-modal"><span style="color: red;">* </span>Amount</p>
-                        <input type="number" class="custom-input-modal" id="amount" name="expenseAmount" value required/>
+                        <input type="number" class="custom-input-modal" name="expenseAmount" id="amount" value required/>
                     </div>
                     <div class="input-wrapper">
                         <p class="label-input-modal"><span style="color: red;">* </span>Type</p>
@@ -122,7 +129,10 @@
                     </div>
                     <div class="input-wrapper">
                         <p class="label-input-modal">Receipt</p>
-                        <input type="file" class="custom-input-modal" id="receipt" name="expenseReceipt" value required/>
+                        <div class="file-input-container">
+                            <input type="file" class="custom-input-modal" id="receipt" name="expenseReceipt" value required/>
+                            <span class="file-input-label"><i class="fas fa-upload"></i> Choose Receipt</span>
+                        </div>
                     </div>
                     <div class="btn btn-blue" id="add-expense">Add Expense</div>
                 </form>
