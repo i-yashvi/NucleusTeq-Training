@@ -1,0 +1,18 @@
+What is Apache Spark? 
+Apache Spark is a fast, open-source, distributed computing system designed for big data 
+processing. It provides an easy-to-use interface for programming entire clusters with implicit 
+data parallelism and fault tolerance. 
+Key Features 
+● In-memory computation for faster processing 
+● Support for batch and streaming data 
+● APIs for Java, Scala, Python, and R 
+● Rich libraries including Spark SQL, MLlib (Machine Learning), GraphX (Graph 
+processing), and Spark Streaming 
+Why Use Apache Spark? 
+● Speed: In-memory processing is much faster than Hadoop MapReduce 
+● Ease of use: High-level APIs and SQL support 
+● Flexibility: Can run on Hadoop, Kubernetes, standalone, or cloud 
+● Ecosystem: Integrates well with many data sources and tools 
+Java Support in Spark 
+Spark provides native support for Java through its Java APIs, which allow you to build scalable 
+big data applications leveraging the Spark Core, DataFrame, and Spark SQL functionalities. 

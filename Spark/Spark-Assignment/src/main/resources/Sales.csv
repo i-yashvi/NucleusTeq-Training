@@ -1,0 +1,15 @@
+transaction_id,product_id,product_name,category,sales_amount,sales_date,customer_id,review_text,quantity,region,notes
+1,101,Apple,Fruit,10.5,01-07-25,1001,Fresh and tasty apple,5,North,
+2,102,Banana,Fruit,8,01-07-25,1002,Banana is good,3,South,Late delivery
+12,108,Mango,Fruit,15,06-07-25,1009,Sweet mango,10,North,
+3,101,Apple,Fruit,10.5,02-07-25,1003,Sweet apple,7,North,
+4,,Carrot,Vegetable,7.5,02-07-25,1004,Crunchy carrot,4,East,
+5,104,Broccoli,Vegetable,12,03-07-25,1005,Healthy and green,2,West,
+6,101,Apple,Fruit,10.5,03-07-25,1001,Fresh and tasty apple,5,North,
+7,,,,,,,missing data here,,,
+8,105,Orange,Fruit,9,04-07-25,1006,Sweet and juicy orange,6,South,
+9,106,Potato,Vegetable,5,04-07-25,1007,Good for fries,10,East,Check quality
+2,102,Banana,Fruit,8,01-07-25,1002,Banana is good,3,South,Late delivery
+10,107,Tomato,Vegetable,6.5,05-07-25,1008,Fresh tomato,8,West,
+11,108,Mango,Fruit,15,06-07-25,1009,Sweet mango,10,North,
+12,108,Mango,Fruit,15,06-07-25,1009,Sweet mango,10,North,

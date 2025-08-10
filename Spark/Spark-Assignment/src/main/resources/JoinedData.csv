@@ -1,0 +1,16 @@
+user_id,user_name,location,product_id,quantity,price,order_id,order_date
+U1,Alice,New York,P1,2,500,O1,01-08-25
+U1,Alice,New York,P3,3,200,O4,02-08-25
+U1,Alice,New York,P4,1,3000,O7,04-08-25
+U1,Alice,New York,P1,4,500,O8,05-08-25
+U1,Alice,New York,P2,1,1500,O10,06-08-25
+U1,Alice,New York,P5,3,800,O13,07-08-25
+U1,Alice,New York,P2,2,1500,O14,08-08-25
+U1,Alice,New York,P1,1,500,O15,09-08-25
+U2,Bob,Los Angeles,P2,1,1500,O2,01-08-25
+U2,Bob,Los Angeles,P5,2,800,O11,06-08-25
+U3,Charlie,Chicago,P1,1,500,O3,02-08-25
+U3,Charlie,Chicago,P3,2,200,O12,07-08-25
+U4,Diana,New York,P2,2,1500,O5,03-08-25
+U5,Eva,Houston,P3,5,200,O6,04-08-25
+U6,Frank,Chicago,P4,2,3000,O9,05-08-25
